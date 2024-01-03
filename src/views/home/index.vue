@@ -1,7 +1,10 @@
 <template>
 	<div class="home-container">
-		<Main></Main>
+		<Main />
+		<About />
 		<Core />
+		<Character style="margin-top: 100px" />
+		<Market style="margin-top: 100px" />
 	</div>
 </template>
 
@@ -12,7 +15,10 @@ import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '/@/stores/themeConfig';
 import { useTagsViewRoutes } from '/@/stores/tagsViewRoutes';
 import Main from './components/Main.vue';
+import About from './components/About.vue';
 import Core from './components/Core.vue';
+import Character from './components/Character.vue';
+import Market from './components/Market.vue';
 
 // 定义变量内容
 const homeLineRef = ref();
@@ -488,6 +494,7 @@ watch(
 $homeNavLengh: 8;
 .home-container {
 	overflow: hidden;
+	padding-bottom: 40px;
 	.home-card-one,
 	.home-card-two,
 	.home-card-three {

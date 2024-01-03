@@ -1,93 +1,79 @@
 <template>
 	<div class="home-core-wrapper">
-		<div class="inner-left">
-			<div class="title">
-				<span class="dot-left"></span>
-				<span>About Blast Haven</span>
-				<span class="dot-right"></span>
-			</div>
-			<div class="content-1">Welcome to Blast Haven, the groundbreaking Web3 game that offers an unparalleled immersive experience.</div>
-			<div class="content-2">In Blast Haven, you'll be transported into a future world consumed by an apocalyptic wave.</div>
-			<div class="content-3">
-				City ruins, factional conflicts, and fabled research centers will all become your exploration playground in this dystopian landscape.
-			</div>
+		<img class="w100" :src="divideLine" alt="" srcset="" />
+		<div class="content font26">
+			<img class="content-icon content-icon-left" :src="contentLeft" />
+			At the core of Blast Haven lies the fusion of strategy, cooperation, and survival elements, crafting a truly engaging gaming world while
+			maintaining both the fun factor and fairness of the game.
+			<img class="content-icon content-icon-right" :src="contentRight" />
 		</div>
-		<div class="inner-right">
-			<div class="circle-wrapper">
-				<img class="circle" :src="circle" />
-				<div class="text">more</div>
-			</div>
+		<div class="card-wrapper">
+			<CoreCardItem class="card" v-for="(item, index) of cardList" :key="index" :data="item"></CoreCardItem>
 		</div>
 	</div>
 </template>
 
-<script setup lang="ts" name="HomeMain">
-import circle from '../images/bg_circle.png';
+<script setup lang="ts" name="HomeCore">
+import divideLine from '../images/dividing_line.png';
+import contentLeft from '../images/core_content_left.png';
+import contentRight from '../images/core_content_right.png';
+import meet from '../images/meet.png';
+import connect from '../images/connect.png';
+import obtain from '../images/obtain.png';
+import CoreCardItem from './CoreCardItem.vue';
+import { ref } from 'vue';
+
+const cardList = ref([
+	{
+		text: 'Meet and compete with fellow survivors of the future',
+		icon: meet,
+	},
+	{
+		text: 'Connect with your friends and play together',
+		icon: connect,
+	},
+	{
+		text: 'Obtain your survivor ID to begin the journey',
+		icon: obtain,
+	},
+]);
 </script>
 
 <style lang="scss" scoped>
 .home-core-wrapper {
-	width: 100%;
+	position: relative;
 	display: flex;
-	justify-content: center;
-	padding: 92px 0;
-	.inner-left {
-		width: 30%;
-		.title {
-			color: var(--next-color-white);
-			height: 100px;
-			line-height: 100px;
-			font-size: 36px;
-			text-align: center;
-			box-shadow: inset 0px 4px 16px 0px #e75f5a;
-			border-radius: 22px 22px 22px 22px;
-			opacity: 1;
-			border: 1px solid rgba(199, 61, 56, 0.5);
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			padding: 0 5%;
-			margin-bottom: 40px;
-			.dot-left,
-			.dot-right {
-				display: inline-block;
-				width: 17px;
-				height: 17px;
-				border-radius: 100%;
-				background: var(--next-color-white);
-			}
+	flex-direction: column;
+	align-items: center;
+	.content {
+		position: relative;
+		width: 60%;
+		color: var(--next-color-white);
+		margin-top: 40px;
+		padding: 60px;
+		&-icon {
+			position: absolute;
 		}
-		.content-1,
-		.content-2,
-		.content-3 {
-			color: var(--next-color-white);
-			margin-top: 30px;
-			font-size: 22px;
+		&-icon-left {
+			bottom: 0;
+			left: 0;
+		}
+		&-icon-right {
+			top: 0;
+			right: 0;
 		}
 	}
-	.inner-right {
-		width: 30%;
-		margin-left: 10px;
-		.circle-wrapper {
-			position: relative;
-			.circle {
-				width: 100%;
-			}
-			.text {
-				position: absolute;
-				bottom: 0;
-				left: 50%;
-				transform: translateX(-50%);
-				color: var(--next-color-main);
-				font-size: 26px;
-				width: 60%;
-				height: 65px;
-				line-height: 65px;
-				text-align: center;
-				background: #13121e;
-				box-shadow: inset 7px 4px 22px 0px #e75f5a;
-				opacity: 1;
-				border: 1px solid rgba(199, 61, 56, 0.1);
+	.card-wrapper {
+		width: 60%;
+		display: flex;
+		align-items: stretch;
+		margin-top: 100px;
+		.card {
+			width: 32%;
+			flex: 1;
+			flex-shrink: 1;
+			&:nth-child(2) {
+				margin: 0 20px;
 			}
 		}
 	}
