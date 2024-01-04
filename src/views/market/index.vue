@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div class="market-wrapper">
-			<div class="market-item-wrapper" v-for="(item, index) of havenList" :key="index">
+			<div class="market-item-wrapper" @click="havenClick" v-for="(item, index) of havenList" :key="index">
 				<div class="icon-wrapper">
 					<img class="icon" :src="item.icon" alt="" srcset="" />
 				</div>
@@ -30,6 +30,8 @@ import haven5 from '/@/views/home/images/Blast_Haven_5.png';
 import haven6 from '/@/views/home/images/Blast_Haven_6.png';
 import haven7 from '/@/views/home/images/Blast_Haven_7.png';
 import haven8 from '/@/views/home/images/Blast_Haven_8.png';
+import { useRouter } from 'vue-router';
+
 const havenList = ref([
 	{
 		name: 'Desert Tempest',
@@ -88,6 +90,10 @@ const havenList = ref([
 		icon: haven8,
 	},
 ]);
+const router = useRouter();
+const havenClick = () => {
+	router.push({ path: '/market/detail' });
+};
 </script>
 
 <style lang="scss" scoped>

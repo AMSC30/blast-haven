@@ -57,6 +57,11 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 				name: 'market',
 				component: () => import('/@/views/market/index.vue'),
 			},
+			{
+				path: '/market/detail',
+				name: 'marketDetail',
+				component: () => import('/@/views/market/detail.vue'),
+			},
 		],
 	},
 ];
