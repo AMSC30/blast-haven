@@ -298,7 +298,7 @@ body,
 
 /* 外边距、内边距全局样式
 ------------------------------- */
-@for $i from 1 through 35 {
+@for $i from 1 through 50 {
 	.mt#{$i} {
 		margin-top: #{$i}px !important;
 	}

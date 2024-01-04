@@ -8,7 +8,8 @@
 			<span class="normal-text">Roadmap</span>
 			<span class="normal-text">Market</span>
 		</div>
-		<img :src="login" class="layout-header-breadcrumb-index-login" />
+		<img :src="login" @click="toLogin" class="layout-header-breadcrumb-index-login" />
+		<Login v-model="loginDialogShow" />
 		<!-- 
 		<el-dropdown :show-timeout="70" :hide-timeout="50" @command="onHandleCommandClick">
 			<span class="layout-header-breadcrumb-user-link">
@@ -24,7 +25,7 @@
 </template>
 
 <script setup lang="ts" name="layoutBreadcrumbIndex">
-import { reactive, onMounted, onUnmounted } from 'vue';
+import { reactive, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useRoutesList } from '/@/stores/routesList';
@@ -36,6 +37,12 @@ import { useI18n } from 'vue-i18n';
 import { Session, Local } from '/@/utils/storage';
 import logoPng from '/@/views/home/images/logo_with_title.png';
 import login from '/@/views/home/images/login.png';
+import Login from '/@/components/login/index.vue';
+
+const loginDialogShow = ref(false);
+const toLogin = () => {
+	loginDialogShow.value = true;
+};
 
 // 定义变量内容
 const stores = useRoutesList();
