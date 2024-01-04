@@ -2,11 +2,11 @@
 	<div class="layout-header-breadcrumb-index">
 		<img :src="logoPng" class="layout-header-breadcrumb-index-logo" />
 		<div class="nav-wrapper">
-			<span class="normal-text">Home</span>
+			<span class="normal-text" @click="toHome">Home</span>
 			<span class="normal-text">Core</span>
 			<span class="normal-text">Role</span>
 			<span class="normal-text">Roadmap</span>
-			<span class="normal-text">Market</span>
+			<span class="normal-text" @click="toMarket">Market</span>
 		</div>
 		<img :src="login" @click="toLogin" class="layout-header-breadcrumb-index-login" />
 		<Login v-model="loginDialogShow" />
@@ -50,6 +50,14 @@ const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
 const { routesList } = storeToRefs(stores);
 const route = useRoute();
+const router = useRouter();
+
+const toMarket = () => {
+	router.push({ path: '/market' });
+};
+const toHome = () => {
+	router.push({ path: '/home' });
+};
 
 // 定义变量内容
 // const { t } = useI18n();
@@ -180,9 +188,14 @@ onMounted(() => {
 		justify-content: center;
 		align-items: center;
 		font-size: 22px;
+		user-select: none;
 		.normal-text {
 			color: var(--next-text-color-regular);
 			padding: 0 16px;
+			cursor: pointer;
+			&:hover {
+				color: var(--next-color-red-1);
+			}
 		}
 	}
 	&-login {
