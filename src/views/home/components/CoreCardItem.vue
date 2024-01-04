@@ -41,6 +41,8 @@ const { data } = toRefs(props);
 			padding: 30px;
 			border-radius: 40px;
 			flex: 1;
+			text-align: center;
+			font-weight: 600;
 		}
 	}
 }

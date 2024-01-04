@@ -4,7 +4,8 @@
 		<About />
 		<Core />
 		<Character style="margin-top: 100px" />
-		<Market style="margin-top: 100px" />
+		<Road style="margin-top: 100px" />
+		<Market />
 	</div>
 </template>
 
@@ -19,6 +20,7 @@ import About from './components/About.vue';
 import Core from './components/Core.vue';
 import Character from './components/Character.vue';
 import Market from './components/Market.vue';
+import Road from './components/Road.vue';
 
 // 定义变量内容
 const homeLineRef = ref();

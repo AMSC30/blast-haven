@@ -27,7 +27,7 @@ import Blast_Haven_3 from '../images/Blast_Haven_3.png';
 import CharacterCardItem from './CharacterCardItem.vue';
 const cardList = ref([
 	{
-		text: 'Desert Tempest Gang',
+		text: 'Desert Tempest',
 		icon: Blast_Haven_1,
 	},
 	{
@@ -58,7 +58,10 @@ const cardList = ref([
 		opacity: 1;
 		border: 1px solid;
 		.content {
-			padding: 40px;
+			padding: 0 40px 40px;
+			line-height: 33px;
+			text-align: center;
+			font-weight: 600;
 		}
 		.card-wrapper {
 			display: flex;

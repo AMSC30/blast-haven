@@ -12,7 +12,9 @@
 			</div>
 			<div class="content font30">
 				<p>The Blast Haven Market will serve as a pivotal hub for player interaction and collaboration.</p>
-				<p style="margin-top: 30px">Here, you can buy, sell, and trade NFTs, as well as engage in specific NFT faction interactions.</p>
+				<p style="margin-top: 30px">
+					Here, you can <span>buy</span>, <span>sell</span>, and <span>trade NFTs</span>, as well as engage in specific NFT faction interactions.
+				</p>
 				<p style="margin-top: 50px; text-align: center" class="font36">Join us</p>
 			</div>
 			<div class="card-wrapper">
@@ -79,7 +81,7 @@ const cardList = ref([
 		width: 60%;
 		margin-top: 80px;
 		color: var(--next-color-white);
-		padding: 80px 160px 65px;
+		padding: 80px 100px 65px;
 		background-image: url('../images/Market_bg.png');
 		background-size: 100% 100%;
 		position: relative;
@@ -113,10 +115,18 @@ const cardList = ref([
 				height: 17px;
 				border-radius: 100%;
 				background: var(--next-color-white);
+				box-shadow: 0px 4px 10px 0px #e75f5a;
 			}
 		}
 		.content {
-			padding: 40px;
+			padding: 40px 0;
+			p {
+				text-align: center;
+				font-weight: 600;
+				span {
+					color: #f3fc2e;
+				}
+			}
 		}
 		.card-wrapper {
 			display: flex;

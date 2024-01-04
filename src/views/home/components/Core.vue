@@ -51,6 +51,7 @@ const cardList = ref([
 		color: var(--next-color-white);
 		margin-top: 40px;
 		padding: 60px;
+		font-weight: 600;
 		&-icon {
 			position: absolute;
 		}

@@ -39,11 +39,13 @@ const { data } = toRefs(props);
 		justify-content: center;
 		align-items: stretch;
 		flex: 1;
+		font-weight: 600;
 		span {
 			backdrop-filter: blur(5px);
-			padding: 30px;
+			padding: 30px 10px;
 			border-radius: 40px;
 			flex: 1;
+			text-align: center;
 		}
 	}
 }

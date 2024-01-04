@@ -15,7 +15,7 @@
 		<div class="inner-right">
 			<div class="circle-wrapper">
 				<img class="circle" :src="circle" />
-				<div class="text">more</div>
+				<div class="text font26">more</div>
 			</div>
 		</div>
 	</div>
@@ -63,6 +63,7 @@ import circle from '../images/bg_circle.png';
 			color: var(--next-color-white);
 			margin-top: 30px;
 			font-size: 22px;
+			line-height: 34px;
 		}
 	}
 	.inner-right {
