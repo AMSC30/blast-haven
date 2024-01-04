@@ -21,18 +21,20 @@
 			<el-divider class="mt30">
 				<span class="divider-text font18">Connect with Crypto Wallet</span>
 			</el-divider>
-			<div class="entry mt30 w100">
+			<div class="entry mt30 w100" @click="toLogin">
 				<img class="icon" :src="Metamask" alt="" srcset="" />
 				<span class="text font24">Continue with Metamask</span>
 			</div>
 		</div>
 	</el-dialog>
+	<Mint v-model="mintShow" />
 </template>
 
 <script setup lang="ts" name="layoutMain">
 import { ref, toRefs } from 'vue';
 import savePng from './images/safe.png';
 import Metamask from './images/Metamask.png';
+import Mint from './mint.vue';
 
 const emit = defineEmits(['update:modelValue']);
 const props = defineProps({
@@ -41,6 +43,11 @@ const props = defineProps({
 
 const { modelValue: show } = toRefs(props);
 const handleClose = () => {
+	emit('update:modelValue', false);
+};
+const mintShow = ref(false);
+const toLogin = () => {
+	mintShow.value = true;
 	emit('update:modelValue', false);
 };
 
