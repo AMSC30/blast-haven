@@ -34,9 +34,10 @@
 						<template v-slot:title>
 							<span class="fw600 font22">Offers</span>
 						</template>
-						<div class="font16">
+						<!-- <div class="font16">
 							Controlled consequences: users should be granted the freedom to operate, including canceling, aborting or terminating current operation.
-						</div>
+						</div> -->
+						<OfferTable></OfferTable>
 					</el-collapse-item>
 				</el-collapse>
 			</div>
@@ -47,35 +48,7 @@
 					<template v-slot:title>
 						<span class="fw600 font22">Activities</span>
 					</template>
-					<table class="offerTable">
-						<tr>
-							<th>Action</th>
-							<th>Market</th>
-							<th>Date</th>
-							<th>From</th>
-							<th>To</th>
-							<th>Price</th>
-						</tr>
-						<tr v-for="index in 10" :key="index">
-							<td><p class="">LISTING</p></td>
-							<td><p class="">market</p></td>
-							<td>
-								<p class="">2 days ago</p>
-							</td>
-							<td>
-								<p class="d-flex align-items-center">0x2c3b...1C79</p>
-							</td>
-							<td>
-								<p class="d-flex align-items-center">0x2c3b...1C79</p>
-							</td>
-							<td>
-								<div class="">
-									<span class="">0.0339 ETH</span>
-									<span class="dolor">($70.83)</span>
-								</div>
-							</td>
-						</tr>
-					</table>
+					<ActivityTable />
 				</el-collapse-item>
 			</el-collapse>
 		</div>
@@ -85,7 +58,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import haven1 from '/@/views/home/images/Blast_Haven_1.png';
-import crystal from './images/crystal.png';
+import crystal from '/@/views/market/images/crystal.png';
+import ActivityTable from '/@/components/activity-table/index.vue';
+import OfferTable from '/@/components/offer-table/index.vue';
 
 const activeDes = ref([]);
 const activeTable = ref(['1']);
@@ -175,37 +150,8 @@ const activeOffers = ref(['1']);
 	.table-wrapper {
 		width: 60%;
 		margin: auto;
-		.offerTable {
-			white-space: nowrap;
-			width: 100%;
-			border-collapse: collapse;
-			caption-side: bottom;
-			tr {
-				border: 0 solid;
-				border-color: inherit;
-				th,
-				td {
-					padding: 10px;
-					border: 0 solid;
-					padding: 10px;
-					border: 0 solid;
-					color: white;
-				}
-				th {
-					border-bottom: 2px solid var(--next-color-grey-1);
-					font-size: 22px;
-					border-color: inherit;
-					text-align: -webkit-match-parent;
-				}
-				td {
-					font-size: 16px;
-					vertical-align: middle;
-					border-color: inherit;
-					.dolor {
-						color: var(--next-color-grey-1);
-					}
-				}
-			}
+		:deep(.el-collapse-item__wrap) {
+			padding: 0 !important;
 		}
 	}
 }

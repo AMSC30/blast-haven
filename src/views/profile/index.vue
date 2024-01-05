@@ -1,13 +1,33 @@
 <template>
 	<div>
-		<div class="market-wrapper">
-			<NftItem v-for="(item, index) of havenList" :key="index" :data="item" />
+		<div class="profile-wrapper pt40">
+			<div class="base-info-wrapper">
+				<img class="avatar" :src="trade" />
+				<div class="info-wrapper ml20">
+					<p class="name fw600">Portfolio</p>
+					<p class="des font16 mt8">Top whitelisted NFTs on zkSync Era</p>
+				</div>
+			</div>
+			<el-tabs v-model="activeName" class="mt20">
+				<el-tab-pane label="NFTs" name="first">
+					<div class="nft-list-wrapper pb20">
+						<NftItem v-for="(item, index) of havenList" :key="index" :data="item" />
+					</div>
+				</el-tab-pane>
+				<el-tab-pane label="Offers" name="third">Offers</el-tab-pane>
+				<el-tab-pane label="Activity" name="fourth">
+					<div class="pb20">
+						<ActivityTable class="table-wrapper" />
+					</div>
+				</el-tab-pane>
+			</el-tabs>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import trade from '/@/views/profile/trade.svg';
+import ActivityTable from '/@/components/activity-table/index.vue';
 import haven1 from '/@/views/home/images/Blast_Haven_1.png';
 import haven2 from '/@/views/home/images/Blast_Haven_2.png';
 import haven3 from '/@/views/home/images/Blast_Haven_3.png';
@@ -17,8 +37,8 @@ import haven6 from '/@/views/home/images/Blast_Haven_6.png';
 import haven7 from '/@/views/home/images/Blast_Haven_7.png';
 import haven8 from '/@/views/home/images/Blast_Haven_8.png';
 import NftItem from '/@/components/nft-item/index.vue';
-// import { useRouter } from 'vue-router';
-
+import { ref } from 'vue';
+const activeName = ref('first');
 const havenList = ref([
 	{
 		name: 'Desert Tempest',
@@ -77,20 +97,35 @@ const havenList = ref([
 		icon: haven8,
 	},
 ]);
-// const router = useRouter();
-// const havenClick = () => {
-// 	router.push({ path: '/market/detail' });
-// };
 </script>
 
 <style lang="scss" scoped>
-.market-wrapper {
-	width: 80%;
-	display: grid;
-	grid-template-columns: repeat(4, auto);
-	column-gap: 20px;
-	row-gap: 20px;
-	padding: 20px 0;
+.profile-wrapper {
+	width: 60%;
 	margin: auto;
+	color: var(--next-color-white);
+	.base-info-wrapper {
+		display: flex;
+		align-items: center;
+		.info-wrapper {
+			.des {
+				color: var(--next-color-grey-1);
+			}
+		}
+	}
+	.nft-list-wrapper {
+		display: grid;
+		grid-template-columns: repeat(4, auto);
+		column-gap: 20px;
+		row-gap: 20px;
+	}
+	.table-wrapper {
+		border-radius: 20px;
+	}
+	:deep(.el-tabs__item) {
+		font-size: 26px;
+		height: 56px;
+		line-height: 56px;
+	}
 }
 </style>

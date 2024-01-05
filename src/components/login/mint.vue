@@ -31,7 +31,7 @@
 						<img class="card ml20" :src="idCard" alt="" srcset="" />
 					</div>
 					<div class="action-wrapper mt40">
-						<div class="action">
+						<div class="action" @click="toProfile">
 							<img class="card" :src="buttonLogo" alt="" srcset="" />
 						</div>
 						<div class="skip font22 ml30 mb10" @click="handleSkip">Skip for now</div>
@@ -49,7 +49,9 @@ import buttonLogo from './images/button_logo.png';
 import step1 from './images/Step1.png';
 import step2 from './images/Step2.png';
 import step3 from './images/Step3.png';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const emit = defineEmits(['update:modelValue']);
 const props = defineProps({
 	modelValue: Boolean,
@@ -58,6 +60,10 @@ const props = defineProps({
 const { modelValue: show } = toRefs(props);
 const handleSkip = () => {
 	emit('update:modelValue', false);
+};
+const toProfile = () => {
+	emit('update:modelValue', false);
+	router.push({ path: '/profile' });
 };
 const steps = ref([{ icon: step1 }, { icon: step2 }, { icon: step3 }]);
 const stepIndex = ref(1);

@@ -203,8 +203,24 @@
 
 /* Tabs 标签页
 ------------------------------- */
-.el-tabs__nav-wrap::after {
-	height: 1px !important;
+.el-tabs__header {
+	margin: 0 0 30px;
+	.el-tabs__nav-wrap {
+		.el-tabs__active-bar {
+			background-color: var(--next-color-red-1) !important;
+		}
+		.el-tabs__item {
+			&.is-active {
+				color: var(--next-color-red-1) !important;
+			}
+			&:hover {
+				color: var(--next-color-red-1) !important;
+			}
+		}
+		&::after {
+			height: 1px !important;
+		}
+	}
 }
 
 /* Dropdown 下拉菜单
