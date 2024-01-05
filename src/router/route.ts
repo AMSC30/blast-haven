@@ -64,6 +64,11 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 			},
 		],
 	},
+	{
+		path: '/game',
+		name: 'game',
+		component: () => import('/@/views/game/index.vue'),
+	},
 ];
 
 /**
