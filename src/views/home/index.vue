@@ -497,6 +497,8 @@ $homeNavLengh: 8;
 .home-container {
 	overflow: hidden;
 	padding-bottom: 40px;
+	font-family: Ops One;
+
 	.home-card-one,
 	.home-card-two,
 	.home-card-three {

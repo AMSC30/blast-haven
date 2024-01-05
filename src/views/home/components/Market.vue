@@ -49,6 +49,7 @@ const cardList = ref([
 
 <style lang="scss" scoped>
 .home-market-wrapper {
+	font-family: Ops One;
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -120,9 +121,9 @@ const cardList = ref([
 		}
 		.content {
 			padding: 40px 0;
+			font-family: Ops One;
 			p {
 				text-align: center;
-				font-weight: 600;
 				span {
 					color: #f3fc2e;
 				}
