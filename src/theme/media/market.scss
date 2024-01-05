@@ -1,0 +1,23 @@
+@import './index.scss';
+
+/* 页面宽度小于768px
+------------------------------- */
+@media screen and (max-width: $md) {
+	.market-detail {
+		.market-detail-wrapper,
+		.table-wrapper {
+			width: 100% !important;
+		}
+	}
+}
+
+/* 页面宽度小于1200px
+------------------------------- */
+@media screen and (max-width: $lg) {
+	.market-detail {
+		.market-detail-wrapper,
+		.table-wrapper {
+			width: 80% !important;
+		}
+	}
+}

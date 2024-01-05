@@ -17,9 +17,9 @@
 			<div class="right-wrapper">
 				<span class="id font22">#4204</span>
 				<p class="font26 fw600 mt30">Phoenix #4204</p>
-				<p class="mt30"><span class="fw600">Owned</span><span>&nbsp;by&nbsp;</span><span>0x2c3b...1c79</span></p>
+				<p class="mt30 font16"><span class="fw600">Owned</span><span>&nbsp;by&nbsp;</span><span>0x2c3b...1c79</span></p>
 				<div class="mt30 buy-out pd22">
-					<p class="fw600">Buyout Price</p>
+					<p class="fw600 font20">Buyout Price</p>
 					<p class="price mt20">
 						<img style="width: 35px" :src="crystal" alt="" srcset="" />
 						<span class="font26 fw600 ml10">0.0420&nbsp;ETH</span>
@@ -30,7 +30,7 @@
 					</p>
 				</div>
 				<el-collapse class="mt30" v-model="activeOffers">
-					<el-collapse-item name="4">
+					<el-collapse-item name="1">
 						<template v-slot:title>
 							<span class="fw600 font22">Offers</span>
 						</template>
@@ -43,7 +43,7 @@
 		</div>
 		<div class="table-wrapper mt30">
 			<el-collapse v-model="activeTable">
-				<el-collapse-item name="4">
+				<el-collapse-item name="1">
 					<template v-slot:title>
 						<span class="fw600 font22">Activities</span>
 					</template>
@@ -56,43 +56,22 @@
 							<th>To</th>
 							<th>Price</th>
 						</tr>
-						<tr>
-							<td><p class="d=flex align-items-center">LISTING</p></td>
-							<td class="d-flex justify-content-center align-items-center"></td>
+						<tr v-for="index in 10" :key="index">
+							<td><p class="">LISTING</p></td>
+							<td><p class="">market</p></td>
 							<td>
-								<div class="mb-0 fs-16 w-full d-flex align-items-center timelink" data-tooltip-id="time-activity-table-0">
-									<a
-										class="text-decoration-none teva-text-primary d-flex h-full"
-										href="https://explorer.zksync.io/tx/0x361c7111af253bfbbd1700fc425da03dd29193f60ac4437fcaf68bab10c747f8"
-										target="__blank"
-										>2 days ago </a
-									><br />
-								</div>
+								<p class="">2 days ago</p>
 							</td>
 							<td>
-								<p class="d-flex align-items-center">
-									&nbsp;<a
-										class="text-decoration-none text-black walletaddress-link"
-										href="/explore?type=users&amp;usersearch=0x2c3ba2Ce12AB2aD238E4F409D0535D4898551C79"
-										>0x2c3b...1C79</a
-									>
-								</p>
+								<p class="d-flex align-items-center">0x2c3b...1C79</p>
 							</td>
 							<td>
-								<p class="d-flex align-items-center">
-									&nbsp;<a
-										class="text-decoration-none text-black walletaddress-link"
-										href="/explore?type=users&amp;usersearch=0x2c3ba2Ce12AB2aD238E4F409D0535D4898551C79"
-										>0x2c3b...1C79</a
-									>
-								</p>
+								<p class="d-flex align-items-center">0x2c3b...1C79</p>
 							</td>
 							<td>
-								<div class="ethHolder d-flex align-items-center">
-									<div class="ethDollar ps-3">
-										<p class="mb-0 fs-16">0.0339 ETH</p>
-										<span class="opacity-light">($70.83)</span>
-									</div>
+								<div class="">
+									<span class="">0.0339 ETH</span>
+									<span class="dolor">($70.83)</span>
 								</div>
 							</td>
 						</tr>
@@ -109,8 +88,8 @@ import haven1 from '/@/views/home/images/Blast_Haven_1.png';
 import crystal from './images/crystal.png';
 
 const activeDes = ref([]);
-const activeTable = ref([]);
-const activeOffers = ref([]);
+const activeTable = ref(['1']);
+const activeOffers = ref(['1']);
 </script>
 
 <style lang="scss" scoped>
@@ -124,6 +103,7 @@ const activeOffers = ref([]);
 				border-radius: 16px;
 				padding: 10px 20px;
 				height: auto;
+				color: var(--next-color-white);
 				&.is-active {
 					border-radius: 16px 16px 0 0;
 				}
@@ -135,11 +115,10 @@ const activeOffers = ref([]);
 		}
 	}
 	.market-detail-wrapper {
-		width: 80%;
+		width: 60%;
 		display: grid;
 		grid-template-columns: 30% auto;
 		column-gap: 60px;
-		// row-gap: 20px;
 		margin: auto;
 		.left-wrapper {
 			display: flex;
@@ -151,9 +130,9 @@ const activeOffers = ref([]);
 			.id {
 				height: 48px;
 				display: inline-block;
-				padding: 0 26px;
+				padding: 0 24px;
 				line-height: 48px;
-				border-radius: 16px;
+				border-radius: 24px;
 				background-color: var(--next-color-black);
 			}
 			.buy-out {
@@ -181,10 +160,12 @@ const activeOffers = ref([]);
 					.make {
 						padding: 10px 40px;
 						border-radius: 26px;
-						border: 1px solid var(--next-bg-main);
+						border: 1px solid var(--next-color-grey-1);
 						cursor: pointer;
+
 						&:hover {
 							background-color: var(--next-bg-main);
+							border: 1px solid var(--next-bg-main);
 						}
 					}
 				}
@@ -192,7 +173,7 @@ const activeOffers = ref([]);
 		}
 	}
 	.table-wrapper {
-		width: 80%;
+		width: 60%;
 		margin: auto;
 		.offerTable {
 			white-space: nowrap;
@@ -202,19 +183,27 @@ const activeOffers = ref([]);
 			tr {
 				border: 0 solid;
 				border-color: inherit;
-				th {
-					border-bottom: 2px solid hsla(0, 0%, 44%, 0.247);
-					font-size: 16px;
-					padding: 15px;
+				th,
+				td {
+					padding: 10px;
 					border: 0 solid;
+					padding: 10px;
+					border: 0 solid;
+					color: white;
+				}
+				th {
+					border-bottom: 2px solid var(--next-color-grey-1);
+					font-size: 22px;
 					border-color: inherit;
 					text-align: -webkit-match-parent;
 				}
 				td {
-					padding: 15px;
+					font-size: 16px;
 					vertical-align: middle;
-					border: 0 solid;
 					border-color: inherit;
+					.dolor {
+						color: var(--next-color-grey-1);
+					}
 				}
 			}
 		}
