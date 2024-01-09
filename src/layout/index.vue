@@ -1,10 +1,6 @@
 <template>
 	<el-container class="layout-container flex-center layout-backtop">
-		<el-header class="layout-header" v-show="!isTagsViewCurrenFull">
-			<div class="layout-navbars-container">
-				<Header />
-			</div>
-		</el-header>
+		<LayoutHeader />
 		<LayoutMain ref="layoutMainRef" />
 	</el-container>
 </template>
@@ -14,11 +10,11 @@ import { onBeforeMount, onUnmounted } from 'vue';
 import { useThemeConfig } from '/@/stores/themeConfig';
 import { Local } from '/@/utils/storage';
 import mittBus from '/@/utils/mitt';
-import { defineAsyncComponent, ref, watch, nextTick, onMounted } from 'vue';
+import { ref, watch, nextTick, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { useTagsViewRoutes } from '/@/stores/tagsViewRoutes';
-import Header from '/@/layout/component/Header.vue';
+import LayoutHeader from '/@/layout/component/Header.vue';
+import LayoutMain from '/@/layout/component/main.vue';
 
 // 窗口大小改变时(适配移动端)
 const onLayoutResize = () => {
@@ -47,10 +43,6 @@ onUnmounted(() => {
 	window.removeEventListener('resize', onLayoutResize);
 });
 
-const LayoutMain = defineAsyncComponent(() => import('/@/layout/component/main.vue'));
-// 定义变量内容
-const storesTagsViewRoutes = useTagsViewRoutes();
-const { isTagsViewCurrenFull } = storeToRefs(storesTagsViewRoutes);
 // 定义变量内容
 const layoutMainRef = ref<InstanceType<typeof LayoutMain>>();
 const storesThemeConfig = useThemeConfig();
@@ -94,11 +86,3 @@ watch(
 	}
 );
 </script>
-<style scoped lang="scss">
-.layout-navbars-container {
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-	height: 100%;
-}
-</style>

@@ -21,7 +21,7 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
 		root: process.cwd(),
 		resolve: { alias },
 		base: mode.command === 'serve' ? './' : env.VITE_PUBLIC_PATH,
-		optimizeDeps: { exclude: ['vue-demi'] },
+		optimizeDeps: { exclude: [] },
 		server: {
 			host: '0.0.0.0',
 			port: env.VITE_PORT as unknown as number,

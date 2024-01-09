@@ -11,7 +11,7 @@
 		append-to-body
 	>
 		<div class="content-container">
-			<img class="safe" :src="savePng" />
+			<img class="safe" :src="safePng" />
 			<p class="font34 mt25">Web3</p>
 			<div class="list-wrapper mt30">
 				<p class="list-item" v-for="(item, index) of list" :key="index">
@@ -32,7 +32,7 @@
 
 <script setup lang="ts" name="layoutMain">
 import { ref, toRefs } from 'vue';
-import savePng from './images/safe.png';
+import safePng from './images/safe.png';
 import Metamask from './images/Metamask.png';
 import Mint from './mint.vue';
 

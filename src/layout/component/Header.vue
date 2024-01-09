@@ -1,16 +1,19 @@
 <template>
-	<div class="layout-header-breadcrumb-index">
-		<img :src="logoPng" class="layout-header-breadcrumb-index-logo" />
-		<div class="nav-wrapper">
-			<span class="normal-text" @click="toHome">Home</span>
-			<span class="normal-text">Core</span>
-			<span class="normal-text">Role</span>
-			<span class="normal-text">Roadmap</span>
-			<span class="normal-text" @click="toMarket">Market</span>
-		</div>
-		<img :src="login" @click="toLogin" class="layout-header-breadcrumb-index-login" />
-		<Login v-model="loginDialogShow" />
-		<!-- 
+	<el-header class="layout-header">
+		<div class="layout-header-breadcrumb-index">
+			<img :src="logoPng" class="layout-header-breadcrumb-index-logo" />
+			<div class="nav-wrapper">
+				<span class="normal-text" @click="toHome">Home</span>
+				<span class="normal-text">Core</span>
+				<span class="normal-text">Role</span>
+				<span class="normal-text">Roadmap</span>
+				<span class="normal-text" @click="toMarket">Market</span>
+			</div>
+
+			<img :src="login" @click="toLogin" class="layout-header-breadcrumb-index-login" />
+
+			<LoginDialog v-model="loginDialogShow" />
+			<!-- 
 		<el-dropdown :show-timeout="70" :hide-timeout="50" @command="onHandleCommandClick">
 			<span class="layout-header-breadcrumb-user-link">
 				{{ 'common' }}
@@ -21,7 +24,8 @@
 				</el-dropdown-menu>
 			</template>
 		</el-dropdown> -->
-	</div>
+		</div>
+	</el-header>
 </template>
 
 <script setup lang="ts" name="layoutBreadcrumbIndex">
@@ -33,11 +37,10 @@ import { useThemeConfig } from '/@/stores/themeConfig';
 import mittBus from '/@/utils/mitt';
 import { useRouter } from 'vue-router';
 // import { ElMessageBox } from 'element-plus';
-import { useI18n } from 'vue-i18n';
-import { Session, Local } from '/@/utils/storage';
+import { Local } from '/@/utils/storage';
 import logoPng from '/@/views/home/images/logo_with_title.png';
 import login from '/@/views/home/images/login.png';
-import Login from '/@/components/login/index.vue';
+import LoginDialog from '/@/components/login/index.vue';
 
 const loginDialogShow = ref(false);
 const toLogin = () => {
@@ -178,6 +181,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .layout-header-breadcrumb-index {
+	width: 100%;
 	height: 85px;
 	display: flex;
 	justify-content: center;

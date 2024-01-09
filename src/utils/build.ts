@@ -20,11 +20,7 @@ export const buildConfig = {
 					var: 'Vue',
 					path: 'dist/vue.global.js',
 				},
-				{
-					name: 'vue-demi',
-					var: 'VueDemi',
-					path: 'lib/index.iife.js',
-				},
+
 				{
 					name: 'vue-router',
 					var: 'VueRouter',

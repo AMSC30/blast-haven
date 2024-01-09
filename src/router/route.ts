@@ -76,10 +76,6 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 	},
 ];
 
-/**
- * 定义404、401界面
- * @link 参考：https://next.router.vuejs.org/zh/guide/essentials/history-mode.html#netlify
- */
 export const notFoundAndNoPower = [
 	{
 		path: '/:path(.*)*',
@@ -114,26 +110,6 @@ export const staticRoutes: Array<RouteRecordRaw> = [
 		component: () => import('/@/views/login/index.vue'),
 		meta: {
 			title: '登录',
-		},
-	},
-	/**
-	 * 提示：写在这里的为全屏界面，不建议写在这里
-	 * 请写在 `dynamicRoutes` 路由数组中
-	 */
-	{
-		path: '/visualizingDemo1',
-		name: 'visualizingDemo1',
-		component: () => import('/@/views/visualizing/demo1.vue'),
-		meta: {
-			title: 'message.router.visualizingLinkDemo1',
-		},
-	},
-	{
-		path: '/visualizingDemo2',
-		name: 'visualizingDemo2',
-		component: () => import('/@/views/visualizing/demo2.vue'),
-		meta: {
-			title: 'message.router.visualizingLinkDemo2',
 		},
 	},
 ];
