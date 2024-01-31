@@ -2,7 +2,6 @@
 	<div class="home-market-wrapper">
 		<div class="line-wrapper w100">
 			<img class="image w100" :src="marketLine" alt="" srcset="" />
-			<span class="text font36">Market</span>
 		</div>
 		<div class="content-wrapper">
 			<div class="title">
@@ -26,7 +25,7 @@
 
 <script setup lang="ts" name="HomeCore">
 import { ref } from 'vue';
-import marketLine from '../images/market_line.png';
+import marketLine from '../images/dividing_line_market.png';
 import twitter from '../images/twitter.png';
 import discord from '../images/discord.png';
 import gmail from '../images/gmail.png';

@@ -2,7 +2,6 @@
 	<div class="home-road-wrapper">
 		<div class="line-wrapper w100">
 			<img class="image w100" :src="roadLine" alt="" srcset="" />
-			<span class="text font36">Blast Haven Roadmap</span>
 		</div>
 		<div class="content-wrapper">
 			<roadItem v-for="(item, index) of cardList" :key="index" :data="item" />
@@ -12,7 +11,7 @@
 
 <script setup lang="ts" name="HomeRoad">
 import { ref } from 'vue';
-import roadLine from '../images/Road_line.png';
+import roadLine from '../images/dividing_line_roadmap.png';
 import phaseOne from '../images/Phase_one.png';
 import phaseTwo from '../images/Phase_two.png';
 import phaseThree from '../images/Phase_three.png';
