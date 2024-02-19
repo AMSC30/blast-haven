@@ -1,0 +1,395 @@
+<script type="module">
+    // https://docs.ethers.org/v6/getting-started/
+    import { ethers } from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.min.js";
+
+    const API_NODE = 'http://43.134.188.188/api/v1'
+
+    //钱包地址
+    let wallet
+    //基本参数
+    let config
+    //钱包
+    let provider
+    //钱包签名
+    let signer
+    //三个合约
+    let citizen, faction, vault
+    //当前地址钱包信息
+    let wallet_info
+
+
+    //请求API
+    async function post(path, data) {
+        const response = await fetch(API_NODE + path, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        return await response.json();
+    }
+
+    /*
+        初始化
+    */
+    window.initialize = async function () {
+        //0. 检测是否安装Metamask
+        if (typeof window.ethereum === 'undefined') {
+            console.error('没有安装metamask')
+            return
+        }
+
+        //各种事件
+        ethereum.on('chainChanged', function () {
+            console.log('网络切换')
+            window.location.reload();
+        });
+        ethereum.on('accountsChanged', function () {
+            console.log('钱包切换')
+            window.location.reload();
+        });
+        ethereum.on('connect', function () {
+            console.log('连接成功')
+        })
+        ethereum.on('disconnect', function () {
+            console.log('断开连接')
+        })
+        ethereum.on('message', function (msg) {
+            console.log('消息')
+            console.log(msg)
+        })
+
+        //1. 请求API接口/config
+        const info = await post('/config')
+        console.log(`基本参数: ${JSON.stringify(info.data)}`)
+
+        //2. 尝试连接钱包
+        const wallets = await ethereum.request({
+            method: 'eth_requestAccounts',
+            params: [],
+        })
+        wallet = wallets[0]
+        console.log(`连接钱包地址: ${wallet}`)
+
+        //3. 获取当前链ID
+        const expected = '0x' + info.data.chain_id.toString(16)
+        const chainId = await ethereum.request({ method: 'eth_chainId' })
+        console.log(`当前链ID: ${chainId} 期望: ${expected}`)
+        if (chainId !== expected) {
+            console.log('当前链ID不匹配，尝试切换')
+            //切换链
+            await ethereum.request({
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: expected }],
+            })
+        }
+
+        //钱包连接完成
+        config = info.data
+        console.log(`成功连接钱包: ${wallet}`)
+        document.querySelector('#wallet_address').innerHTML = wallet
+
+        provider = new ethers.BrowserProvider(window.ethereum)
+        signer = await provider.getSigner();
+
+        // 三份合约
+        citizen = new ethers.Contract(config.citizen.address, config.citizen.abi, signer);
+        faction = new ethers.Contract(config.faction.address, config.faction.abi, signer);
+        vault = new ethers.Contract(config.vault.address, config.vault.abi, signer);
+
+        await update_info()
+    }
+
+    window.mint_faction = async function () {
+        if (!wallet) {
+            console.error('钱包尚未连接')
+            return
+        }
+
+        try {
+            // 白名单，超过2个token，调用whitelistMint
+            if (wallet_info.whitelist && wallet_info.mint_remain <= 3) {
+                const encoder = new TextEncoder();
+                const msgBytes = encoder.encode(config.sign_message);
+                const msgHex = Array.from(msgBytes).map(b => b.toString(16).padStart(2, '0')).join('');
+                const msg = '0x' + msgHex;
+                const sign = await ethereum.request({
+                    method: 'personal_sign',
+                    params: [msg, wallet],
+                });
+
+                const res = await post('/mint_proof', {
+                    address: wallet,
+                    sign: sign
+                })
+
+                const tx = await faction.whitelistMint(res.data.proof)
+                document.querySelector('#mint_faction').innerHTML = tx.hash
+            } else {
+                const tx = await faction.freeMint()
+                document.querySelector('#mint_faction').innerHTML = tx.hash
+            }
+        } catch (err) {
+            console.error(err)
+            document.querySelector('#mint_faction').innerHTML = err.message
+        }
+    }
+
+    window.update_info = async function () {
+        if (!wallet) {
+            console.error('钱包尚未连接')
+            return
+        }
+
+        const res = await post('/wallet_info', {
+            address: wallet
+        })
+        console.log(`钱包状态: ${JSON.stringify(res)}`)
+        document.querySelector('#wallet_info').innerHTML = JSON.stringify(res)
+        wallet_info = res.data
+    }
+
+    window.create_citizen = async function () {
+        try {
+            const res = await citizen.mint()
+            document.querySelector('#create_citizen').innerHTML = res.hash
+        } catch (err) {
+            console.error(err)
+            document.querySelector('#create_citizen').innerHTML = err.message
+        }
+    }
+
+    window.approve_faction = async function () {
+        try {
+            const isApproved = await faction.isApprovedForAll(wallet, config.vault.address)
+            if (isApproved) {
+                document.querySelector('#approve_faction').innerHTML = '已授权'
+                return
+            }
+            const res = await faction.setApprovalForAll(config.vault.address, true)
+            document.querySelector('#approve_faction').innerHTML = res.hash
+        } catch (err) {
+            console.error(err)
+            document.querySelector('#approve_faction').innerHTML = err.message
+        }
+    }
+
+    window.stack = async function () {
+        try {
+            const id = document.querySelector('#stack_id').value
+            const res = await vault.stack(id)
+            document.querySelector('#stack').innerHTML = res.hash
+        } catch (err) {
+            console.error(err)
+            document.querySelector('#stack').innerHTML = err.message
+        }
+    }
+
+    window.stack_redeem = async function () {
+        try {
+            const id = document.querySelector('#stack_redeem_id').value
+            const res = await vault.stackRedeem(id)
+            document.querySelector('#stack_redeem').innerHTML = res.hash
+        } catch (err) {
+            console.error(err)
+            document.querySelector('#stack_redeem').innerHTML = err.message
+        }
+    }
+
+    window.sell = async function () {
+        try {
+            const id = document.querySelector('#sell_id').value
+            const res = await vault.sell(id, ethers.parseEther('0.1'))
+            document.querySelector('#sell').innerHTML = res.hash
+        } catch (err) {
+            console.error(err)
+            document.querySelector('#sell').innerHTML = err.message
+        }
+    }
+
+    window.buy = async function () {
+        try {
+            const id = document.querySelector('#buy_id').value
+            const res = await vault.buy(id, { value: ethers.parseEther('0.1') })
+            document.querySelector('#buy').innerHTML = res.hash
+        } catch (err) {
+            console.error(err)
+            document.querySelector('#buy').innerHTML = err.message
+        }
+    }
+
+    window.sale_redeem = async function () {
+        try {
+            const id = document.querySelector('#sale_redeem_id').value
+            const res = await vault.saleRedeem(id)
+            document.querySelector('#sale_redeem').innerHTML = res.hash
+        } catch (err) {
+            console.error(err)
+            document.querySelector('#sale_redeem').innerHTML = err.message
+        }
+    }
+
+    window.sale_list = async function () {
+        const res = await post('/sale_list', {
+            // 帮派类型, 0=所有
+            token_type: 2,
+            // 按价格排序
+            ascending: true,
+            page_size: 10,
+            page_index: 1
+        })
+        console.log(`销售列表: ${JSON.stringify(res)}`)
+    }
+
+    window.stack_list = async function () {
+        const res = await post('/stack_list', {
+            page_size: 10,
+            page_index: 1
+        })
+        console.log(`质押列表: ${JSON.stringify(res)}`)
+    }
+
+    window.reward_list = async function () {
+        const res = await post('/reward_list', {
+            page_size: 10,
+            page_index: 1
+        })
+        console.log(`积分列表: ${JSON.stringify(res)}`)
+    }
+
+    window.nonce_check = async function () {
+        // metamask提供的nonce不可靠
+        const newProvider = new ethers.JsonRpcProvider('https://l1rpc.katla.taiko.xyz')
+        const nonce = await newProvider.getTransactionCount(wallet, 'pending')
+        document.querySelector('#nonce_check').innerHTML = nonce.toString()
+    }
+
+    window.onload = initialize
+</script>
+
+<div>
+    <button onclick="initialize()">连接钱包</button>
+    <label id="wallet_address">未连接</label>
+</div>
+<div>
+    <button onclick="nonce_check()">Nonce校正</button>
+    <label id="nonce_check"></label>
+</div>
+<div>
+    <button onclick="update_info()">钱包状态</button>
+    <label id="wallet_info"></label>
+</div>
+<hr />
+<div>
+    <button onclick="create_citizen()">创建身份</button>
+    <label id="create_citizen"></label>
+</div>
+<div>
+    <button onclick="mint_faction()">Mint帮派</button>
+    <label id="mint_faction"></label>
+</div>
+<div>
+    <button onclick="approve_faction()">NFT授权</button>
+    <label id="approve_faction"></label>
+</div>
+<hr />
+<div>
+    <button onclick="stack()">质押NFT</button>
+    <input type="text" id="stack_id" placeholder="TokenID" />
+    <label id="stack"></label>
+</div>
+<div>
+    <button onclick="stack_redeem()">赎回质押</button>
+    <input type="text" id="stack_redeem_id" placeholder="TokenID" />
+    <label id="stack_redeem"></label>
+</div>
+<hr />
+<div>
+    <button onclick="sell()">出售NFT</button>
+    <input type="text" id="sell_id" placeholder="TokenID" />
+    <label id="sell"></label>
+</div>
+<div>
+    <button onclick="buy()">购买NFT</button>
+    <input type="text" id="buy_id" placeholder="TokenID" />
+    <label id="buy"></label>
+</div>
+<div>
+    <button onclick="sale_redeem()">赎回销售</button>
+    <input type="text" id="sale_redeem_id" placeholder="TokenID" />
+    <label id="sale_redeem"></label>
+</div>
+<hr />
+<div>
+    <button onclick="sale_list()">出售列表</button>
+    <button onclick="stack_list()">质押列表</button>
+    <button onclick="reward_list()">积分排行</button>
+</div>
+<hr />
+<p>
+    - 测试环境: RPC=https://l1rpc.katla.taiko.xyz CHAINID=17000
+    <hr />
+    - 测试钱包及私钥
+    <hr />
+    - 管理账户 0x50CC4073FdA0a2E2c984A9b9129C60913240c86b
+    <hr />
+    - 白名单
+    0x50CC4073FdA0a2E2c984A9b9129C60913240c86b
+    0x3042BB4E9772B6320389eCaEac4F172bad1d5740
+    0xf34A177e43bc2DA7F0eE77beb5Ed007D6dd8Fd89
+    0xE8Dad9E4F8236bC25DE98Ca7B88F09e4413C7d16
+    0x01c66057B0687BaA6f8A4835a9Fa9A0990Ed2963
+    0xC2B279eFd7982D016845221cE707334274bA429a
+    0x1bB8DfC993f6585a8FDAbf9C9339CB3D8996f004
+    0x40f20aB34438f11b4d8610585C2FCEF9B6600728
+    0x6574ab78a47FAfd30DE3179E12cC762a474bD968
+    0x6Ea9a06432BC1F6C89dB4d9707615f1678ebFdDC
+    0x68a65F1db7280E5de243abC7dC2C92bE8904A290
+    0x22C55FF5b4dd45B8A419AfFF0AC1126fa294645A
+    0x631B031C1334B44Df18328F242037274729A34Ca
+    0x0f108Df6Dc71443CE165Bde374663E81fA74013d
+    0x7a3324C115886a9452A7472765e86910c90DC446
+    0xA9b92B396eEAd96916E038BC6a2126B37cA8d725
+    0x7b5dAEDD8e485ee80ff146bC054964Ea13eEB958
+    0xCC8F09B6d9B3520653DD63E2C78Fb7b9eB33f44A
+    0xbA1F7A001001D3fadC0a7F535E0AE4525F4dD942
+    0x2D5244b5675DbbF70104914a106d7430A31FF0A6
+    0xd60aa49d1d9728907b934A22ab7713E789FC6151
+    0x78A5962E4A19e89bf40DB833dD5296A71a479e07
+    0x6Df6D5BF083Cf4C499E1B37BabA91572E20d92D5
+    0x97410aFb044D794e75972141E3A4062926584A1F
+    0x1307C95cf5c9f0da4705C4fad3018fdca6d493CE
+    0xfaa69130D785E2d1aB0F9ea6a55758D20585e5c0
+    0xEEaF35e9eEc62A89f2a95168bbdf38b593aa1299
+    0x9B7322114c699cB4B548A558EBf9852425AAc15c
+    0x86Abd78E8E3F81aF9eC7cC3D352E1459B7581266
+    0x09f106290e23eAd88066723110D5142c963F1474
+    0x05F6c21aAaD7acC63D70a56E3Ce1FC3e0e4E7B3c
+    0xB0F302Fe3b9d2fC3e33Dcde0E60c38C6b08E51F7
+    0xA491E96E3192Fc175c4BE2607117a691ED0d6A9d
+    0x30DF7993727fAca500b5b1632Ac087Efdb12c165
+    0xccD7B687C758c4767cD72a9c8F2C26B6b4da38E5
+    0xE800c56fEEe8E26BF1a0E755791356A437747fC4
+    0x34dDAadADC19462BD1147220D5B0055580Ee0e7d
+    0x622Fe81122F4cddcf1df6F51268ad6412A0AC15f
+    0x10665ee9b8cD9F283E54c7d9a7A6Ef361f24924B
+    0x85a09495511183F850eDC221dEE44ecDEbb87dd1
+    0x46196588d12D5b0E867c5b1B6046b0d87984Ff0e
+    0xb512b0BDf051628AAB9A9196dA56390bD1C1887d
+    0x467c2CC8919b94E45E2c614F3Abc1560df064611
+    0x6783AcF4aeCcd20a94F752B0BB8696c2E022e4f2
+    0x7Cc6eE4d024768B8a42eF3828AbF62cC03B57961
+    0x356EdB44dC058a8bD775b8ef43C51B4FF58EEA99
+    0x176b50fef943Ab24560dE617B12fdaF0a7B5ceB8
+    0xa50AbC6D250AfdBD3c7763a38c648BFf1A11D25C
+    0xe77fc52971d5208A527FE1cdA7d2B975568590D4
+    0x2837cE94DFc99Af9B3015abfE7e6422550626c29
+    </hr>
+</p>
+
+<style>
+    div {
+        margin: 20px;
+    }
+</style>

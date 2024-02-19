@@ -17,11 +17,11 @@
 				<p class="font22" style="text-align: center">
 					{{ statusText[status] }}
 				</p>
-				<P v-if="status === 'Again'" class="font16 mt20" style="text-align: center">Received successfully</P>
+				<p v-if="status === 'Again'" class="font16 mt20" style="text-align: center">Received successfully</p>
 				<div class="action-wrapper mt40">
 					<div class="action font22" @click="handleClick">{{ status }}</div>
 				</div>
-				<P v-if="status === 'Start'" class="font16 mt20" style="text-align: center">You get two spins</P>
+				<p v-if="status === 'Start'" class="font16 mt20" style="text-align: center">You get two spins</p>
 			</div>
 			<div class="footer mt40 font22" v-if="status === 'Claim'">
 				<span>Market</span>

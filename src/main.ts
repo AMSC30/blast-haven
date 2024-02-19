@@ -6,6 +6,7 @@ import { i18n } from '/@/i18n/index';
 
 import ElementPlus from 'element-plus';
 import '/@/theme/index.scss';
+import './init';
 
 const app = createApp(App);
 
