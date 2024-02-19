@@ -31,7 +31,7 @@ async function post(path, data) {
 /*
      初始化
  */
-window.initialize = async function () {
+window.initialize = function () {
 	//0. 检测是否安装Metamask
 	if (typeof window.ethereum === 'undefined') {
 		console.log('没有安装metamask');
@@ -59,44 +59,50 @@ window.initialize = async function () {
 	});
 
 	//1. 请求API接口/config
-	const info = await post('/config');
-	// console.log(`基本参数: ${JSON.stringify(info.data)}`);
-
-	//2. 尝试连接钱包
-	const wallets = await ethereum.request({
-		method: 'eth_requestAccounts',
-		params: [],
-	});
-	wallet = wallets[0];
-	console.log(`连接钱包地址: ${wallet}`);
-
-	//3. 获取当前链ID
-	const expected = '0x' + info.data.chain_id.toString(16);
-	const chainId = await ethereum.request({ method: 'eth_chainId' });
-	console.log(`当前链ID: ${chainId} 期望: ${expected}`);
-	if (chainId !== expected) {
-		console.log('当前链ID不匹配，尝试切换');
-		//切换链
-		await ethereum.request({
-			method: 'wallet_switchEthereumChain',
-			params: [{ chainId: expected }],
+	let info = null;
+	post('/config')
+		.then((data) => {
+			info = data;
+			//2. 尝试连接钱包
+			return ethereum.request({
+				method: 'eth_requestAccounts',
+				params: [],
+			});
+		})
+		.then((wallets) => {
+			wallet = wallets[0];
+		})
+		.then(() => {
+			//3. 获取当前链ID
+			return ethereum.request({ method: 'eth_chainId' });
+		})
+		.then((chainId) => {
+			const expected = '0x' + (info.data.chain_id * 1).toString(16);
+			if (chainId !== expected) {
+				//切换链
+				return ethereum.request({
+					method: 'wallet_switchEthereumChain',
+					params: [{ chainId: expected }],
+				});
+			}
+		})
+		.then(() => {
+			//钱包连接完成
+			config = info.data;
+			provider = new ethers.BrowserProvider(window.ethereum);
+			return provider.getSigner();
+		})
+		.then((data) => {
+			signer = data;
+			// 三份合约
+			citizen = new ethers.Contract(config.citizen.address, config.citizen.abi, signer);
+			faction = new ethers.Contract(config.faction.address, config.faction.abi, signer);
+			vault = new ethers.Contract(config.vault.address, config.vault.abi, signer);
+			update_info();
+		})
+		.catch((e) => {
+			console.log('错误', e);
 		});
-	}
-
-	//钱包连接完成
-	config = info.data;
-	console.log(`成功连接钱包: ${wallet}`);
-	document.querySelector('#wallet_address').innerHTML = wallet;
-
-	provider = new ethers.BrowserProvider(window.ethereum);
-	signer = await provider.getSigner();
-
-	// 三份合约
-	citizen = new ethers.Contract(config.citizen.address, config.citizen.abi, signer);
-	faction = new ethers.Contract(config.faction.address, config.faction.abi, signer);
-	vault = new ethers.Contract(config.vault.address, config.vault.abi, signer);
-
-	await update_info();
 };
 
 window.mint_faction = async function () {
@@ -146,7 +152,6 @@ window.update_info = async function () {
 		address: wallet,
 	});
 	console.log(`钱包状态: ${JSON.stringify(res)}`);
-	document.querySelector('#wallet_info').innerHTML = JSON.stringify(res);
 	wallet_info = res.data;
 };
 
